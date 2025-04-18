@@ -1,1 +1,1 @@
-# pw-python
+# pw-js
