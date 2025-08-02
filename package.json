@@ -16,7 +16,7 @@
   },
   "homepage": "https://github.com/AbdiMD/orange-hrm_pw-js#readme",
   "devDependencies": {
-    "@playwright/test": "^1.52.0",
+    "@playwright/test": "^1.54.2",
     "@types/node": "^22.14.1"
   },
   "dependencies": {
