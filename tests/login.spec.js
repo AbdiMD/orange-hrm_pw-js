@@ -25,7 +25,7 @@ test("Invalid login - Invalid credentials", async ({ page }) => {
 });
 
 test("Forgot password link", async ({ page }) => {
-  await page.goto(process.env.BASE_URL);
-  await page.getByText("Forgot your password?", { exact: true }).click();
+  const loginPage = new LoginPage(page);
+  await loginPage.goToForgotPassword(process.env.BASE_URL);
   await expect(page.url()).toEqual("https://opensource-demo.orangehrmlive.com/web/index.php/auth/requestPasswordResetCode");
 });
