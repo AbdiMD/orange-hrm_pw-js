@@ -1,8 +1,14 @@
 import { test, expect } from "../fixtures";
+const fs = require("fs");
 
 test("Valid login", async ({ page, loginPage }) => {
   await loginPage.login(process.env.BASE_URL, process.env.LOGIN_USERNAME, process.env.LOGIN_PASSWORD);
   await expect(page).toHaveURL(`${process.env.BASE_URL}/web/index.php/dashboard/index`);
+
+  // Save cookies to a file
+  const cookie = await page.context().cookies();
+  const cookieString = JSON.stringify(cookie);
+  fs.writeFileSync("cookie.json", cookieString);
 });
 
 test("Invalid login - Empty form", async ({ loginPage }) => {
