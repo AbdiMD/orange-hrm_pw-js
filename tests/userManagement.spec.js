@@ -20,6 +20,9 @@ test("Add user", async ({page, userManagementPage}) => {
   await userManagementPage.addUser(role, status, username, password, confirmPassword);
   
   // Verify that the user was added successfully
+  await page.getByRole('heading', { name: 'System Users' }).waitFor({ state: 'visible' });
   await expect(page).toHaveURL(`${process.env.BASE_URL}/web/index.php/admin/viewSystemUsers`);
+
+  await userManagementPage.searchUser(username);
   await expect(page.locator(`text=${username}`)).toBeVisible();
 });

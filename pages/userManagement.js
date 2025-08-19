@@ -26,8 +26,10 @@ class UserManagementPage {
   async addUser(role, status, username, password, confirmPassword) {
     await this.userRoleDropdown.click();
     await this.page.getByRole('option', {name: role}).click();
-    await this.employeeNameInput.fill("John Doe");
-    await this.page.getByRole('option', { name: 'John Doe John@' }).click();
+    await this.employeeNameInput.fill("a");
+    await this.page.getByText('Searching...').waitFor({ state: 'visible' });
+    await this.page.getByText('Searching...').waitFor({ state: 'hidden' });
+    await this.page.getByRole('option').first().click();
     await this.statusDropdown.click();
     await this.page.getByRole('option', {name: status}).click();
     await this.usernameInput.fill(username);
@@ -35,6 +37,13 @@ class UserManagementPage {
     await this.confirmPasswordInput.fill(confirmPassword);
     await this.saveButton.click();
     await this.page.waitForLoadState('networkidle'); // Wait for the save action to complete
+  }
+
+  async searchUser(username) {
+    const searchInput = await this.page.getByRole('textbox').nth(1);
+    await searchInput.fill(username);
+    await this.page.getByRole('button', { name: 'Search' }).click();
+    await this.page.waitForLoadState('networkidle'); // Wait for the search results to load
   }
 }
 
