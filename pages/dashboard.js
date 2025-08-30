@@ -1,16 +1,23 @@
+const { expect } = require("@playwright/test");
 const { TIMEOUT } = require("dns");
 
 class DashboardPage {
   constructor(page) {
-    //Time at work
     this.page = page;
-    this.getStopwatchButton = page.locator("//i[@class='oxd-icon bi-stopwatch']");
-    this.note = page.locator("//textarea[@placeholder='Type here']");
-    this.getInButton = page.getByRole("button", { name: "In", exact: true });
-    this.getOutButton = page.getByRole("button", { name: "Out", exact: true });
+
+    //Time at work
+    // this.getStopwatchButton = page.locator("//i[@class='oxd-icon bi-stopwatch']");
+    // this.note = page.locator("//textarea[@placeholder='Type here']");
+    // this.getInButton = page.getByRole("button", { name: "In", exact: true });
+    // this.getOutButton = page.getByRole("button", { name: "Out", exact: true });
+    this.stopwatchButton = page.locator("button:has(i.oxd-icon.bi-stopwatch)");
+    this.note = page.getByPlaceholder("Type here");
+    this.inButton = page.getByRole("button", { name: /^In$/ });
+    this.outButton = page.getByRole("button", { name: /^Out$/ });
+    this.errorMessage = page.getByText("Overlapping Records Found");
 
     //My Actions
-    this.getMyActionsButton = page.locator("//p[normalize-space()='(1) Candidate to Interview']");
+    this.getMyActionsButton = page.getByText("(1) Candidate to Interview");
     this.getCandidatesButton = page.getByRole("link", { name: "Candidates" });
     this.getVacanciesButton = page.getByRole("link", { name: "Vacancies" });
 
@@ -26,28 +33,34 @@ class DashboardPage {
   //Time at work card
 
   async clickStopwatchButton() {
-    await this.getStopwatchButton.waitFor({ state: "visible" });
-    await this.getStopwatchButton.click();
+    // await expect(this.getStopwatchButton).toBeVisible();
+    await this.stopwatchButton.click();
   }
 
   async addNote(note) {
+    await expect(this.note).toBeVisible();
     await this.note.fill(note);
+    await expect(this.note).toHaveValue(note);
   }
 
   async clickInButton() {
-    await this.getInButton.click();
-    await this.page.waitForURL("**/attendance/punchOut");
+    await expect(this.inButton).toBeVisible();
+    await this.inButton.click();
+    await expect(this.page).toHaveURL(/\/attendance\/punchOut/, { timeout: 30000 });
   }
 
   async clickOutButton() {
-    await this.getOutButton.click();
-    await this.page.waitForURL("**/attendance/punchIn");
+    await expect(this.outButton).toBeVisible();
+    await this.outButton.click();
+    await expect(this.page).toHaveURL(/\/attendance\/punchIn/, { timeout: 30000 });
   }
 
   // My Actions card
   async clickMyActionsButton() {
+    await expect(this.getMyActionsButton).toBeVisible();
     await this.getMyActionsButton.click();
-    await this.page.waitForURL("**/recruitment/viewCandidates?statusId=4");
+    await expect(this.page).toHaveURL(/\/recruitment\/viewCandidates(?:\?.*statusId=4)?/);
+    await expect(this.page.getByRole("heading", { name: "Candidates" })).toBeVisible();
   }
 
   async clickCandidatesButton() {
@@ -55,39 +68,41 @@ class DashboardPage {
   }
 
   async clickVacanciesButton() {
+    await expect(this.getVacanciesButton).toBeVisible();
     await this.getVacanciesButton.click();
-    await this.page.waitForURL("**/recruitment/viewJobVacancy");
+    await expect(this.page).toHaveURL(/recruitment\/viewJobVacancy/, { timeout: 30000 });
+    await expect(this.page.getByRole("heading", { name: "Vacancies" })).toBeVisible();
   }
 
   //Quick Launch
   async clickAssignLeaveButton() {
     await this.getAssignLeaveButton.click();
-    await this.page.waitForURL("**/leave/assignLeave");
+    await expect(this.page).toHaveURL(/\/leave\/assignLeave$/);
   }
 
   async clickLeavelistButton() {
     await this.getLeavelistButton.click();
-    await this.page.waitForURL("**/leave/viewLeaveList");
+    await expect(this.page).toHaveURL(/\/leave\/viewLeaveList$/);
   }
 
   async clickTimeSheetButton() {
     await this.getTimeSheetButton.click();
-    await this.page.waitForURL("**/time/viewEmployeeTimesheet");
+    await expect(this.page).toHaveURL(/\/time\/viewEmployeeTimesheet$/);
   }
 
   async clickApplyLeaveButton() {
     await this.getApplyLeaveButton.click();
-    await this.page.waitForURL("**/leave/applyLeave");
+    await expect(this.page).toHaveURL(/\/leave\/applyLeave$/);
   }
 
   async clickMyLeaveButton() {
     await this.getMyLeaveButton.click();
-    await this.page.waitForURL("**/leave/viewMyLeaveList");
+    await expect(this.page).toHaveURL(/\/leave\/viewMyLeaveList$/);
   }
 
   async clickMyTimesheetButton() {
     await this.getMyTimesheetButton.click();
-    await this.page.waitForURL("**/time/viewMyTimesheet");
+    await expect(this.page).toHaveURL(/\/time\/viewMyTimesheet$/);
   }
 }
 
