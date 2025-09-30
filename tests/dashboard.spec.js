@@ -22,17 +22,17 @@ test("Click In button", async ({ dashboardPage }) => {
   await dashboardPage.note.fill("Test note for testing Orange HRM");
 
   //check if the punch out is not done, the punch in first
-  if (await dashboardPage.inButton.isVisible()) {
-    await dashboardPage.note.fill("Test note for testing Orange HRM");
+  if (await dashboardPage.getInButton.isVisible({ timeout: 3000 })) {
     await dashboardPage.clickInButton();
   }
 });
 
 test("Click Out button", async ({ dashboardPage, page }) => {
-  await expect(dashboardPage.stopwatchButton).toBeVisible();
+  await expect(dashboardPage.getStopwatchButton).toBeVisible();
   await dashboardPage.clickStopwatchButton();
   await dashboardPage.note.fill("Test note for testing Orange HRM");
-  if (await dashboardPage.inButton.isVisible()) {
+
+  if (await dashboardPage.getInButton.isVisible({ timeout: 3000 })) {
     await dashboardPage.clickInButton();
     await dashboardPage.clickOutButton.waitFor({ state: "visible" });
   }
