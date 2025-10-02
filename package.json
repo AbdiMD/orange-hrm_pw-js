@@ -16,12 +16,15 @@
   },
   "homepage": "https://github.com/AbdiMD/orange-hrm_pw-js#readme",
   "devDependencies": {
-    "@playwright/test": "^1.54.2",
+    "@playwright/test": "^1.55.0",
     "@types/node": "^22.14.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.5.3"
   },
   "dependencies": {
     "dotenv": "^16.5.0"
+  },
+  "directories": {
+    "test": "tests"
   }
 }

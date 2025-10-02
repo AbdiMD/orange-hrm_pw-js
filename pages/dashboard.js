@@ -1,3 +1,4 @@
+const { expect } = require("@playwright/test");
 const { TIMEOUT } = require("dns");
 
 class DashboardPage {
@@ -34,14 +35,18 @@ class DashboardPage {
     await this.note.fill(note);
   }
 
-  async clickInButton() {
-    await this.getInButton.click();
-    await this.page.waitForURL("**/attendance/punchOut");
-  }
+  async punchIn() {
+    if(await this.getInButton.isVisible({ timeout: 3000 })) {
+      await this.getInButton.click(); 
+      await this.getOutButton.waitFor({ state: "visible", timeout: 10000 });
+    }
+  } 
 
-  async clickOutButton() {
-    await this.getOutButton.click();
-    await this.page.waitForURL("**/attendance/punchIn");
+  async punchOut() {
+    if(await this.getOutButton.isVisible({ timeout: 3000 })) {
+      await this.getOutButton.click();
+      await this.getInButton.waitFor({ state: "visible", timeout: 10000 });
+    }
   }
 
   // My Actions card
