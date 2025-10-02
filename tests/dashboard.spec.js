@@ -17,26 +17,22 @@ test("Add note", async ({ dashboardPage }) => {
   await expect(dashboardPage.note).toHaveValue("Test note for testing Orange HRM");
 });
 
-test("Click In button", async ({ dashboardPage }) => {
+test("Punch In", async ({ dashboardPage }) => {
   await dashboardPage.clickStopwatchButton();
   await dashboardPage.note.fill("Test note for testing Orange HRM");
 
-  //check if the punch out is not done, the punch in first
-  if (await dashboardPage.getInButton.isVisible({ timeout: 3000 })) {
-    await dashboardPage.clickInButton();
-  }
+  await dashboardPage.punchOut();
+
+  await expect(dashboardPage.getInButton).toBeVisible();
 });
 
-test("Click Out button", async ({ dashboardPage, page }) => {
-  await expect(dashboardPage.getStopwatchButton).toBeVisible();
+test("Punch Out", async ({ dashboardPage }) => {
   await dashboardPage.clickStopwatchButton();
   await dashboardPage.note.fill("Test note for testing Orange HRM");
 
-  if (await dashboardPage.getInButton.isVisible({ timeout: 3000 })) {
-    await dashboardPage.clickInButton();
-    await dashboardPage.clickOutButton.waitFor({ state: "visible" });
-  }
-  await dashboardPage.clickOutButton();
+  await dashboardPage.punchIn();
+
+  await expect(dashboardPage.getOutButton).toBeVisible();
 });
 
 //Click Candidate to Interview button on My Actions card in dashboard

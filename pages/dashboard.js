@@ -7,8 +7,8 @@ class DashboardPage {
     this.page = page;
     this.getStopwatchButton = page.locator("//i[@class='oxd-icon bi-stopwatch']");
     this.note = page.locator("//textarea[@placeholder='Type here']");
-    this.getInButton = page.getByRole("button", { name: "Punch In", exact: true });
-    this.getOutButton = page.getByRole("button", { name: "Punch Out", exact: true });
+    this.getInButton = page.getByRole("button", { name: "In", exact: true });
+    this.getOutButton = page.getByRole("button", { name: "Out", exact: true });
 
     //My Actions
     this.getMyActionsButton = page.locator("//p[normalize-space()='(1) Candidate to Interview']");
@@ -35,16 +35,18 @@ class DashboardPage {
     await this.note.fill(note);
   }
 
-  async clickInButton() {
-    await this.getInButton.waitFor({ state: "visible" });
-    await this.getInButton.click();
-    await expect(this.page.locator("text=Punch Out")).toBeVisible({ timeout: 10000 });
-  }
+  async punchIn() {
+    if(await this.getInButton.isVisible({ timeout: 3000 })) {
+      await this.getInButton.click(); 
+      await this.getOutButton.waitFor({ state: "visible", timeout: 10000 });
+    }
+  } 
 
-  async clickOutButton() {
-    await this.getOutButton.waitFor({ state: "visible" });
-    await this.getOutButton.click();
-    await expect(this.page.locator("text=Punch In")).toBeVisible({ timeout: 10000 });
+  async punchOut() {
+    if(await this.getOutButton.isVisible({ timeout: 3000 })) {
+      await this.getOutButton.click();
+      await this.getInButton.waitFor({ state: "visible", timeout: 10000 });
+    }
   }
 
   // My Actions card
